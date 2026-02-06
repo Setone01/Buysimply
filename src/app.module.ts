@@ -8,13 +8,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './guards/jwt.strategy';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { RoleGuard } from './guards/role.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     ThrottlerModule.forRoot([{
-      ttl: 60000, // Time window in milliseconds
-      limit: 10, // Maximum number of requests within the time window
+      ttl: 60000, 
+      limit: 10, 
     }]),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'default_secret',
@@ -30,6 +31,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    RoleGuard,
   ],
 })
 export class AppModule {}
